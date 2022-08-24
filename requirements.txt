@@ -1,0 +1,6 @@
+black
+ipykernel
+matplotlib
+numpy
+pytest
+spacy
