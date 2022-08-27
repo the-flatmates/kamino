@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.utils.dateparse import parse_datetime
 
-from .models import Game
+from .models import Game, Color
 
 def index(request):
     game_list = Game.objects.order_by('-datetime')
@@ -15,9 +15,12 @@ class GameView(generic.DetailView):
 
     def get_object(self, queryset=None):
         datetime_key = parse_datetime(self.kwargs['game_datetime'])
-
-        print(Game.objects.filter(datetime=datetime_key).first())
         return Game.objects.filter(datetime=datetime_key).first()
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['winner_color'] = str(self.object.winners)
+        return data
 
 
 # def game(request, game_datetime):
