@@ -1,0 +1,22 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'games/style.css' %}">
+
+<h1>Details: {{ game.datetime }}</h1>
+
+<table><tr>
+    
+    <td>
+        {% for member in game.red_team.all %}
+            <li>{{ member }}</li>
+        {% endfor %}
+    </td>
+    <td>
+        {% for member in game.blue_team.all %}
+            <li>{{ member }}</li>
+        {% endfor %}
+    </td>
+    <td>{{ game.winners }}</td>
+    <td>{{ game.board }}</td>
+
+</tr></table>

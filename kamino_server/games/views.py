@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.views import generic
+from django.utils.dateparse import parse_datetime
 
 from .models import Game
 
@@ -8,20 +10,49 @@ def index(request):
     return render(request, 'games/index.html', context)
 
 
-def game(request, game_datetime):
-    games = Game.objects.filter(datetime=game_datetime)
+class GameView(generic.DetailView):
+    model = Game
 
-    if len(games) != 1:
-        return HttpResponse(f"{games}")
+    def get_object(self, queryset=None):
+        datetime_key = parse_datetime(self.kwargs['game_datetime'])
 
-    specific_game = games[0]
+        print(Game.objects.filter(datetime=datetime_key).first())
+        return Game.objects.filter(datetime=datetime_key).first()
 
-    context = { 
-        "datetime": specific_game.datetime,
-        "red_team": specific_game.red_team.all(),
-        "blue_team": specific_game.blue_team.all(),
-        "winners": specific_game.winners,
-        "board": specific_game.board,
-    }
 
-    return render(request, 'games/detailed_game.html', context)
+# def game(request, game_datetime):
+#     games = Game.objects.filter(datetime=game_datetime)
+
+#     if len(games) != 1:
+#         return HttpResponse(f"{games}")
+
+#     specific_game = games[0]
+
+#     context = { 
+#         "datetime": specific_game.datetime,
+#         "red_team": specific_game.red_team.all(),
+#         "blue_team": specific_game.blue_team.all(),
+#         "winners": specific_game.winners,
+#         "board": specific_game.board,
+#     }
+
+#     return render(request, 'games/detailed_game.html', context)
+
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
