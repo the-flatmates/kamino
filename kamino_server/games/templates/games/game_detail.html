@@ -7,14 +7,18 @@
 <table><tr>
     
     <td>
-        {% for member in game.red_team.all %}
-            <li>{{ member }}</li>
-        {% endfor %}
+        <ol>
+            {% for member in game.red_team.all %}
+                <li><a style="color: red" href="{% url 'players:player' member.name %}">{{ member }}</a></li>
+            {% endfor %}
+        </ol>
     </td>
     <td>
-        {% for member in game.blue_team.all %}
-            <li>{{ member }}</li>
-        {% endfor %}
+        <ol>
+            {% for member in game.blue_team.all %}
+                <li><a style="color: blue" href="{% url 'players:player' member.name %}">{{ member }}</a></li>
+            {% endfor %}
+        </ol>
     </td>
     <td style="color: {{ winner_color }}">{{ game.winners }}</td>
     <td>{{ game.board }}</td>
