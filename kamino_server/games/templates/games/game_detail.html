@@ -9,15 +9,17 @@
     
         <td>
             <ol>
-                {% for member in game.red_team.all %}
-                    <li><a style="color: red" href="{% url 'players:player' member.name %}">{{ member }}</a></li>
+                {% for name, elo in red_team_elos.items %}
+                    <li>
+                        <a style="color: red" href="{% url 'players:player' name %}">{{ name }} ({{ elo }})</a>
+                    </li>
                 {% endfor %}
             </ol>
         </td>
         <td>
             <ol>
-                {% for member in game.blue_team.all %}
-                    <li><a style="color: blue" href="{% url 'players:player' member.name %}">{{ member }}</a></li>
+                {% for name, elo in blue_team_elos.items %}
+                    <li><a style="color: blue" href="{% url 'players:player' name %}">{{ name }} ({{ elo }})</a></li>
                 {% endfor %}
             </ol>
         </td>

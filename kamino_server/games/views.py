@@ -20,6 +20,21 @@ class GameView(generic.DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['winner_color'] = str(self.object.winners)
+
+        elos = self.object.get_elo_dict()
+
+        red_team_elos = {}
+        blue_team_elos = {}
+        for member in self.object.red_team.all():
+            name = member.name
+            red_team_elos[name] = elos[name]
+        for member in self.object.blue_team.all():
+            name = member.name
+            blue_team_elos[name] = elos[name]
+
+        data["red_team_elos"] = red_team_elos
+        data["blue_team_elos"] = blue_team_elos
+
         return data
 
 

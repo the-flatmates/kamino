@@ -2,6 +2,8 @@ from django.db import models
 
 from typing import List
 
+import json
+
 from players.models import Player
 
 
@@ -49,8 +51,11 @@ class BoardField(models.Field):
 
 class Game(models.Model):
     datetime = models.DateTimeField('date played')
+
     red_team = models.ManyToManyField(Player, related_name='red_team')
     blue_team = models.ManyToManyField(Player, related_name='blue_team')
+
+    elos = models.JSONField(null=True)
 
     winners = models.CharField(
         max_length=5,
@@ -62,3 +67,10 @@ class Game(models.Model):
 
     def __str__(self):
         return f"{self.datetime} ({self.winners})"
+
+    def get_elo_dict(self):
+        try:
+            # for some reason elos is getting single quotes
+            return json.loads(json.dumps(self.elos))
+        except:
+            return ""
