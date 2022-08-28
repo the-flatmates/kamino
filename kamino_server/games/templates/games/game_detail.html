@@ -4,23 +4,25 @@
 
 <h1>Details: {{ game.datetime }}</h1>
 
-<table><tr>
+<table>
+    <tr>
     
-    <td>
-        <ol>
-            {% for member in game.red_team.all %}
-                <li><a style="color: red" href="{% url 'players:player' member.name %}">{{ member }}</a></li>
-            {% endfor %}
-        </ol>
-    </td>
-    <td>
-        <ol>
-            {% for member in game.blue_team.all %}
-                <li><a style="color: blue" href="{% url 'players:player' member.name %}">{{ member }}</a></li>
-            {% endfor %}
-        </ol>
-    </td>
-    <td style="color: {{ winner_color }}">{{ game.winners }}</td>
-    <td>{{ game.board }}</td>
+        <td>
+            <ol>
+                {% for member in game.red_team.all %}
+                    <li><a style="color: red" href="{% url 'players:player' member.name %}">{{ member }}</a></li>
+                {% endfor %}
+            </ol>
+        </td>
+        <td>
+            <ol>
+                {% for member in game.blue_team.all %}
+                    <li><a style="color: blue" href="{% url 'players:player' member.name %}">{{ member }}</a></li>
+                {% endfor %}
+            </ol>
+        </td>
+        <td style="color: {{ winner_color }}">{{ game.winners }}</td>
+        <td>{{ game.board }}</td>
 
-</tr></table>
+    </tr>
+</table>

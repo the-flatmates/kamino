@@ -1,19 +1,31 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views import generic
 
 from .models import Player
+from games.models import Game
 
 def index(request):
     player_list = Player.objects.order_by('-elo')
     context = {"player_list": player_list}
     return render(request, 'players/index.html', context)
 
-def player(request, player_name):
-    players = Player.objects.filter(name=player_name)
 
-    if len(players) != 1:
-        return HttpResponse(f"{players}")
+class PlayerView(generic.DetailView):
+    model = Player
 
-    named_player = players[0]    
-    # output = ', '.join()
-    return HttpResponse(f"{named_player}")
+    def get_object(self, queryset=None):
+        return Player.objects.filter(name=self.kwargs['name']).first()
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+
+        red_games = Game.objects.filter(red_team=self.object)
+        blue_games = Game.objects.filter(blue_team=self.object)
+
+        games = red_games | blue_games
+        games = games.order_by('-datetime')
+
+        data["games"] = games
+
+        return data

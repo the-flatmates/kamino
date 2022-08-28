@@ -1,11 +1,13 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'games/style.css' %}">
+<link rel="stylesheet" href="{% static 'players/style.css' %}">
 
-<h1>Games</h1>
-{% if game_list %}
+<h1>Details: {{ player.name }}</h1>
+
+<h2>Games</h2>
+{% if games %}
 <ul>
-{% for game in game_list %}
+{% for game in games %}
     <li><a href="{% url 'games:game' game.datetime %}">{{ game }}</a></li>
 {% endfor %}
 </ul>
