@@ -1,0 +1,13 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'games/style.css' %}">
+
+{% if games %}
+<ol>
+{% for game in games %}
+    <li><a href="{% url 'games:game' game.datetime %}">{{ game }}</a></li>
+{% endfor %}
+</ol>
+{% else %}
+    <p>No games found</p>
+{% endif %}
