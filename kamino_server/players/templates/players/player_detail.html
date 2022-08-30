@@ -1,11 +1,27 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'players/style.css' %}">
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  </head>
 
-<h1>Details: {{ player.name }}</h1>
+  <body>
 
-<h2>Games</h2>
-{% include 'games/game_list.html' with games=games%}
+    <link rel="stylesheet" href="{% static 'players/style.css' %}">
 
-<h2>Games Won</h2>
-{% include 'games/game_list.html' with games=games_won%}
+    <h1>Details: {{ player.name }}</h1>
+
+    <h2>Elo: {{player.elo}}</h2>
+
+    <h2>Games</h2>
+    {% include 'games/game_list.html' with games=games%}
+
+    <h2>Games Won</h2>
+    {% include 'games/game_list.html' with games=games_won%}
+
+  </body>
+
+</html>

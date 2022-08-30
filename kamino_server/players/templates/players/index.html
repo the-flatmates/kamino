@@ -1,10 +1,29 @@
-<h1>Players</h1>
-{% if player_list %}
-<ul>
-{% for player in player_list %}
-    <li><a href="{% url 'players:player' player.name %}">{{ player }}</a></li>
-{% endfor %}
-</ul>
-{% else %}
-    <p>No players found</p>
-{% endif %}
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.4.3.min.css" rel="stylesheet" type="text/css">
+        <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.4.3.min.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <body>
+        <h1>Players</h1>
+        {% if player_list %}
+        <ul>
+        {% for player in player_list %}
+            <li><a href="{% url 'players:player' player.name %}">{{ player }}</a></li>
+        {% endfor %}
+        </ul>
+        {% else %}
+            <p>No players found</p>
+        {% endif %}
+
+        <h1>Our first Bokeh Graph</h1>
+        {{div | safe}}
+        
+    </body>
+    
+    {% include 'players/bokeh_scripts.html' %}
+    {{script| safe}}
+</html>
