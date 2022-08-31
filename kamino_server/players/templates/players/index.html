@@ -18,11 +18,15 @@
             <p>No players found</p>
         {% endif %}
 
-        <h1>Our first Bokeh Graph</h1>
-        {{div | safe}}
+        <h2>Player Elos</h2>
+        {{ hist_elo_div | safe }}
+
+        <h2>Elo Distribution</h2>
+        {{ elo_dist_div | safe }}
         
     </body>
     
     {% include 'players/bokeh_scripts.html' %}
-    {{script| safe}}
+    {{ hist_elo_script | safe }}
+    {{ elo_dist_script | safe }}
 </html>
