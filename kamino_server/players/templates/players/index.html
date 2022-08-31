@@ -3,7 +3,9 @@
 <!doctype html>
 <html lang="en">
     <head>
-        {% include 'players/bokeh_css.html' %}
+        {% include 'bokeh_css.html' %}
+        
+        {% include 'navbar.html' with current="players" %}
     </head>
 
     <body>
@@ -26,7 +28,7 @@
         
     </body>
     
-    {% include 'players/bokeh_scripts.html' %}
+    {% include 'bokeh_scripts.html' %}
     {{ hist_elo_script | safe }}
     {{ elo_dist_script | safe }}
 </html>

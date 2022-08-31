@@ -2,13 +2,7 @@
 
 <link rel="stylesheet" href="{% static 'games/style.css' %}">
 
+{% include 'navbar.html' with current="games" %}
+
 <h1>Games</h1>
-{% if game_list %}
-<ul>
-{% for game in game_list %}
-    <li><a href="{% url 'games:game' game.datetime %}">{{ game }}</a></li>
-{% endfor %}
-</ul>
-{% else %}
-    <p>No games found</p>
-{% endif %}
+{% include 'games/game_list.html' with games=game_list%}
