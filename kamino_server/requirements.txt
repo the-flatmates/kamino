@@ -1,0 +1,14 @@
+asgiref==3.5.2
+bokeh==2.4.3
+Django==4.1
+django-formtools==2.3
+Jinja2==3.1.2
+MarkupSafe==2.1.1
+numpy==1.23.2
+packaging==21.3
+Pillow==9.2.0
+pyparsing==3.0.9
+PyYAML==6.0
+sqlparse==0.4.2
+tornado==6.2
+typing_extensions==4.3.0
