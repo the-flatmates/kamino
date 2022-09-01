@@ -11,9 +11,6 @@ class Color(models.TextChoices):
     RED = "RED", "RED"
     BLUE = "BLUE", "BLUE"
 
-    # def __str__(self):
-    #     return f"{self.value}"
-
 
 class Word(models.Model):
     word = models.CharField(max_length=200, unique=True)
@@ -64,6 +61,9 @@ class Game(models.Model):
     )
 
     board = BoardField(null=True)
+    board_image = models.ImageField(null=True)
+    board_finished_image = models.ImageField(null=True)
+    board_key_image = models.ImageField(null=True)
 
     def __str__(self):
         return f"{self.datetime} ({self.winners})"

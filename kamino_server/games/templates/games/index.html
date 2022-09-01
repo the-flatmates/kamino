@@ -4,5 +4,7 @@
 
 {% include 'navbar.html' with current="games" %}
 
+<a href="{% url 'games:submit' %}">Submit Game</a>
+
 <h1>Games</h1>
 {% include 'games/game_list.html' with games=game_list%}

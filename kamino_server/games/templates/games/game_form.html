@@ -1,0 +1,51 @@
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% block content %}
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<form action="" method="post">{% csrf_token %}
+<table>
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {{ form }}
+    {% endfor %}
+{% else %}
+    {{ wizard.form }}
+{% endif %}
+</table>
+{% if wizard.steps.prev %}
+<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev" %}</button>
+{% endif %}
+{% if wizard.steps.next %}
+<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
+{% else %}
+<input type="submit" value="{% trans "submit" %}"/>
+{% endif %}
+</form>
+{% endblock %}
+
+<script>
+    window.addEventListener('load', function() {
+        const image_inputs = document.querySelectorAll('input[type="file"]')
+
+        image_inputs.forEach(x => {
+            x.addEventListener('change', function() {
+                console.log(this)
+                if (this.files && this.files[0]) {
+                    {% comment %} var img = document.querySelector('img'); {% endcomment %}
+                    var img = document.getElementById(this.getAttribute("name"))
+                    img.onload = () => {
+                        URL.revokeObjectURL(img.src);  // no longer needed, free memory
+                    }
+        
+                    img.src = URL.createObjectURL(this.files[0]); // set src to blob url
+                }
+            });
+        })
+    });
+</script>

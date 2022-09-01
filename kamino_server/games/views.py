@@ -1,8 +1,18 @@
 from django.shortcuts import render
 from django.views import generic
 from django.utils.dateparse import parse_datetime
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+
+import os
 
 from .models import Game, Color
+from players.models import Player
+from .forms import GameForm, GameFinishedForm
+
+from formtools.wizard.views import SessionWizardView
 
 def index(request):
     game_list = Game.objects.order_by('-datetime')
@@ -38,39 +48,77 @@ class GameView(generic.DetailView):
         return data
 
 
-# def game(request, game_datetime):
-#     games = Game.objects.filter(datetime=game_datetime)
+def calculate_elos(winners: list[Player], losers: list[Player]):
+    # TODO: more complex function
+    new_elos = {}
 
-#     if len(games) != 1:
-#         return HttpResponse(f"{games}")
+    for winner in winners:
+        new_elos[winner.name] = winner.elo + 1
+    
+    for loser in losers:
+        new_elos[loser.name] = loser.elo - 1
 
-#     specific_game = games[0]
-
-#     context = { 
-#         "datetime": specific_game.datetime,
-#         "red_team": specific_game.red_team.all(),
-#         "blue_team": specific_game.blue_team.all(),
-#         "winners": specific_game.winners,
-#         "board": specific_game.board,
-#     }
-
-#     return render(request, 'games/detailed_game.html', context)
+    return new_elos
 
 
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(request, 'polls/detail.html', {
-            'question': question,
-            'error_message': "You didn't select a choice.",
-        })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+def update_elos(new_elos: dict[str, float]):
+    for name, elo in new_elos.items():
+        Player.objects.get(name=name).update(elo=elo)
+
+
+# class SubmitGame(generic.edit.CreateView):
+#     model = Game
+#     fields = ['datetime', 'red_team', 'blue_team', 'winners', 'board_image']
+
+#     success_url = "games/submit_game_finished"
+
+#     def save(self, *args, **kwargs):
+#         game = self.cleaned_data
+
+#         hidtorical_elos = {}
+#         for player in game.red_team + game.blue_team:
+#             historical_elos[player.name] = player.elo
+#         elos = json.dumps(historical_elos)
+        
+#         if game.winners == Color.RED:
+#             winning_team = game.red_team
+#             losing_team = game.blue_team
+#         else:
+#             winning_team = game.blue_team
+#             losing_team = game.red_team
+
+#         update_elos(calculate_elos(winning_team, losing_team))
+
+#         game.save()
+#         return game
+
+
+class GameWizard(SessionWizardView):
+    # TODO: Add processing of board image after first form, 
+    # so second form can display analysis for human correction
+    form_list = [GameForm, GameFinishedForm]
+
+    file_storage = FileSystemStorage(location=settings.MEDIA_ROOT)
+
+    template_name = "games/game_form.html"
+
+    def done(self, form_list, **kwargs):
+        print(form_list)
+
+        game = self.cleaned_data
+
+        hidtorical_elos = {}
+        for player in game.red_team + game.blue_team:
+            historical_elos[player.name] = player.elo
+        elos = json.dumps(historical_elos)
+        
+        if game.winners == Color.RED:
+            winning_team = game.red_team
+            losing_team = game.blue_team
+        else:
+            winning_team = game.blue_team
+            losing_team = game.red_team
+
+        update_elos(calculate_elos(winning_team, losing_team))
+
+        return HttpResponseRedirect('games/')
