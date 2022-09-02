@@ -27,5 +27,7 @@ setup(
         "numpy",
         "pytest",
         "spacy",
+        "opencv-python",
+        "pytesseract",
     ],
 )

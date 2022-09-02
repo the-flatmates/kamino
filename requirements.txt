@@ -4,3 +4,5 @@ matplotlib
 numpy
 pytest
 spacy
+opencv-python
+pytesseract
