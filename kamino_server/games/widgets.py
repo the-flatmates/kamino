@@ -12,8 +12,6 @@ class ImagePreviewWidget(forms.widgets.FileInput):
         end = input_html.find("\"", start)
         input_name = input_html[start:end]
 
-        print(input_html, start, end, input_name)
-
         img_html = mark_safe(
             f'<br><br><img id="{input_name}" src="#" width="50" />')
         return f'{input_html}{img_html}'

@@ -1,3 +1,8 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'games/style.css' %}">
+{% include 'navbar.html' with current="games" %}
+
 {% load i18n %}
 
 {% block head %}
@@ -37,7 +42,6 @@
             x.addEventListener('change', function() {
                 console.log(this)
                 if (this.files && this.files[0]) {
-                    {% comment %} var img = document.querySelector('img'); {% endcomment %}
                     var img = document.getElementById(this.getAttribute("name"))
                     img.onload = () => {
                         URL.revokeObjectURL(img.src);  // no longer needed, free memory
